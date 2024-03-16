@@ -1,0 +1,29 @@
+<%- include('../partials/header.ejs') %>  
+
+<div class="item-container">
+    <% if(items.length){ %>
+        <% items.forEach(item => { %>
+            <div class="item">
+                <a href="/items/<%= item.id %>">
+                    <div class="item-body">
+                        <img src="<%= item.image %>" class="item-img-top" alt="item.png">
+                        <div class="item-description">
+                            <h5 class="item-title"><%= item.title %></h5>
+                            <p class="item-condition"><%= item.condition %></p>
+                            <hr>
+                            <div class="offer-description">
+                                <p class="price">$<%= item.price %></p>
+                                <p class="offer"><%= item.totalOffers %> Offers</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+    <% }); %>
+<% } else { %>
+    <div class="content">
+        <p class="search-message">No results found!</p>
+    </div>
+<% } %>
+</div>
+<%- include('../partials/footer.ejs')%>

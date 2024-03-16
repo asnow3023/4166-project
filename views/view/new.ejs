@@ -1,0 +1,42 @@
+<%- include('../partials/header.ejs') %>  
+
+    <div class="container">
+        <div class="item-container">
+            <div class="introduction">
+                <h3 class="introduction-title">LIST YOUR FURNISHINGS AT INTERNEWER</h3>
+                <p class="introduction-detail">Give a second life to your pre-loved furniture, <br>showcase it to a
+                    community of eager buyers by listing it here.</p>
+            </div>
+                <form class="input-container" action="/items" method="POST" enctype="multipart/form-data">
+                    <div class="condition-container">
+                        <label for="condition">Condition</label>
+                        <select id="condition" name="condition" required>
+                            <option value="">Select item condition</option>
+                            <option value="New">New</option>
+                            <option value="Like New">Like New</option>
+                            <option value="Good Condition">Good Condition</option>
+                            <option value="Aged Vintage/Antique">Aged Vintage/Antique</option>
+                            <option value="Needs Repair/Refurbishment">Needs Repair/Refurbishment</option>
+                        </select>
+                    </div>
+                    <div class="title-container">
+                        <label for="title">Title</label>
+                        <input id="title" type="text" name="title" placeholder="Enter item name" required>
+                    </div>
+                    <div class="price-container">
+                        <label for="price">Price ($)</label>
+                        <input id="price" type="number" name="price" step="0.01" value="29.99" required>
+                    </div>
+                    <div class="details-container">
+                        <label for="details">Details</label>
+                        <textarea id="details" name="details" class="details" placeholder="Enter furniture item details" required></textarea>
+                    </div>
+                    <div class="image-container">
+                        <label for="image">Image</label>
+                        <input id="image" type="file" name="image" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Listing</button>
+                </form>
+        </div>
+    </div>
+<%- include('../partials/footer.ejs') %>  

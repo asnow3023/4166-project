@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="<%= cssFile %>">
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+    <div class="page-container">
+    <div class="header">
+        <div class="header-logo">
+            <a href="/"><img src="../../images/in-logo-transparent.png" alt="iw logo" class="logo-img"></a>
+        </div>
+        <div class="header-search-container">
+            <input type="text" class="search-bar" placeholder="Search">
+            <button type="button" class="btn-search"></button>
+        </div>
+        <nav class="header-menu">
+            <ul class="header-menu-list">
+                <li class="list-inline-item"><a href="/items">Browse</a></li>
+                <li class="list-inline-item"><a href="../new">Sell</a></li>
+                <li class="list-inline-item"><a href="">Sign Up</a></li>
+                <li class="list-inline-item"><a href="">Login</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <div class="container">
+            <h3 class="introduction-title">EDIT YOUR LISTING</h3>
+            <div class="item-container">
+                <div class="introduction">
+                    <h4 class="introduction-title">Previous Image</h4>
+                    <img class="selected-image" src="../<%= item.image %>" alt="previous image">
+                </div>
+                    <form class="input-container"  method="POST" action="/items/<%= item.id %>?_method=PUT" enctype="multipart/form-data">
+                        <div class="condition-container">
+                            <label for="condition">Condition</label>
+                            <select id="condition" name="condition" required>
+                                <option value="">Select item condition</option>
+                                <option value="New" <%= item.condition === 'New' ? 'selected' : '' %>>New</option>
+                                <option value="Like New" <%= item.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
+                                <option value="Good Condition" <%= item.condition === 'Good Condition' ? 'selected' : '' %>>Good Condition</option>
+                                <option value="Aged Vintage/Antique" <%= item.condition === 'Aged Vintage/Antique' ? 'selected' : '' %>>Aged Vintage/Antique</option>
+                                <option value="Needs Repair/Refurbishment" <%= item.condition === 'Needs Repair/Refurbishment' ? 'selected' : '' %>>Needs Repair/Refurbishment</option>
+                            </select>
+                        </div>
+                        <div class="title-container">
+                            <label for="title">Title</label>
+                            <input id="title" type="text" name="title" placeholder="Enter item name" value="<%= item.title %>" required>
+                        </div>
+                        <div class="price-container">
+                            <label for="price">Price ($)</label>
+                            <input id="price" type="number" name="price" step="0.01" value="<%= item.price %>" required>
+                        </div>
+                        <div class="details-container">
+                            <label for="details">Details</label>
+                            <textarea id="details" name="details" class="details" placeholder="Enter furniture item details" required><%= item.details %></textarea>
+                        </div>
+                        <div class="image-container">
+                            <label for="image">Image</label>
+                            <input id="image" type="file" name="image">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Edit Listing</button>
+                    </form>
+            </div>
+        </div>
+
+        <footer>
+            <span>
+                © 2024-2024, InterNewer Inc. or its affiliates
+            </span>
+            <div class="social-medias">
+                <a href="">
+                    <img src="../../images/instagram_icon.png" width="35" height="35" alt="Link to Instagram">
+                </a>
+                <a href="">
+                    <img src="../../images/facebook_icon.png" width="35" height="35" alt="Link to Facebook">
+                </a>
+                <a href="">
+                    <img src="../../images/twitter_icon.png" width="35" height="35" alt="Link to Twitter">
+                </a>
+            </div>
+        </footer>
+        
+        </div>
+        </body>
+        
+        </html>

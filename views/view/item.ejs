@@ -1,0 +1,42 @@
+<%- include('../partials/header.ejs') %>  
+
+<div class="container">
+    <div class="item-img-container">
+        <div class="item-img-main">
+            <img src="<%= item.image %>" class="item-img" alt="item image">
+        </div>
+    </div>
+
+    <div class="item-container">
+        <div class="description-container">
+            <h2 class="title"><%= item.title %></h2>
+            <div class="condition-container">
+                <p class="condition-text">Condition: </p>
+                <p class="condition-value"><%= item.condition %></p>
+            </div>
+            <div class="seller-container">
+                <p>Seller: </p>
+                <p class="seller-value"><%= item.seller %></p>
+            </div>
+            <div class="offer-container">
+                <div class="price-block">
+                    <p class="price-label">Starting Price: </p>
+                    <p class="price-value">$<%= item.price %> |</p>  
+                    <p class="offer-value"><%= item.totalOffers %></p>
+                    <p class="offer-label"> Offers</p>
+                </div>
+            </div>
+            <div class="detail-container">
+                <p>Item Details: </p>
+                <p><%= item.details %></p>
+            </div>
+            <div class="button-container"> 
+                <form>
+                    <button type="submit" class="btn-edit"  formmethod="GET" formaction="/items/<%= item.id %>/edit">Edit</button>
+                    <button type="submit" class="btn-delete" formmethod="POST" formaction="/items/<%= item.id %>?_method=DELETE">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../partials/footer.ejs') %> 
