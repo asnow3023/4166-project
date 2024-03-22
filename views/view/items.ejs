@@ -4,7 +4,7 @@
     <% if(items.length){ %>
         <% items.forEach(item => { %>
             <div class="item">
-                <a href="/items/<%= item.id %>">
+                <a href="/items/<%= item._id %>">
                     <div class="item-body">
                         <img src="<%= item.image %>" class="item-img-top" alt="item.png">
                         <div class="item-description">

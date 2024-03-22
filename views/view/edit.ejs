@@ -39,7 +39,7 @@
                     <h4 class="introduction-title">Previous Image</h4>
                     <img class="selected-image" src="../<%= item.image %>" alt="previous image">
                 </div>
-                    <form class="input-container"  method="POST" action="/items/<%= item.id %>?_method=PUT" enctype="multipart/form-data">
+                    <form class="input-container"  method="POST" action="/items/<%= item._id %>?_method=PUT" enctype="multipart/form-data">
                         <div class="condition-container">
                             <label for="condition">Condition</label>
                             <select id="condition" name="condition" required>
