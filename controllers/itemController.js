@@ -14,12 +14,17 @@ exports.handleReq = (req, res, next) => {
             res.render('view/items', {cssFile: '/styles/items.css', items});
 
     } else if(!searchInput){ // no search input - items
-        items = model.find();
-        items.sort((a,b) => a.price - b.price);
-        res.render('view/items', {cssFile: '/styles/items.css', items});
+        items = model.find()
+        .then(items => {
+            items.sort((a,b) => a.price - b.price);
+            res.render('view/items', {cssFile: '/styles/items.css', items});
+        })
+        .catch(err=> next(err));
+
     }
 }
 
+//item details
 exports.item = (req, res, next) => {
     let id = req.params.id;
     let item = model.findById(id);
@@ -32,10 +37,12 @@ exports.item = (req, res, next) => {
     }
 };
 
+//render new listing page
 exports.new = (req, res) => {
     res.render('view/new', { cssFile: '/styles/new.css' });
 };
 
+//initiate delete function
 exports.delete = (req, res, next) => {
     let id = req.params.id;
     if(model.deleteById(id)){
@@ -47,6 +54,7 @@ exports.delete = (req, res, next) => {
     }
 };
 
+//create and store new listing
 exports.create = (req,res) => {
     let item = req.body;
     item.image = '../images/' + req.file.filename;
@@ -68,6 +76,7 @@ exports.edit = (req, res, next) => {
     }
 };
 
+//update the edited listing
 exports.update = (req, res, next) => {
     let item = req.body;
     let id = req.params.id;
