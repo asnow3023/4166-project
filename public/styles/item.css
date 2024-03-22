@@ -97,7 +97,7 @@ hr{
 /* ---END OF HEADER--- */
 
 .container{
-    margin: 0 auto;
+    margin: 25px auto 25px auto;
     width: 100%;
     display: flex;
     min-height: 83%;
@@ -110,6 +110,7 @@ hr{
     padding: 20px 20px 20px 20px;
     min-width: 40%;
     min-height: 500px;
+    max-height: 600px;
     align-items: center;
     margin: 0 auto;
 }
@@ -224,7 +225,7 @@ footer {
     font-weight: bold;
     display: flex;
     bottom:0;
-    position:absolute;
+    position:relative;
     justify-content: space-between;
     padding: 10px 0px 10px 20px;
     align-items: center;
