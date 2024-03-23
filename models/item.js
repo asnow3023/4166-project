@@ -10,7 +10,7 @@ const itemSchema = new Schema({
     details: {type: String, required: [true, 'Item details cannot be empty']},
     image: {type: String, required: [true, 'You must upload an image']},
     totalOffers: {type: Number, default: 0},
-    isActive: {type: Boolean, default: true}
+    active: {type: Boolean, default: true}
 });
 
 module.exports = mongoose.model('Items', itemSchema);

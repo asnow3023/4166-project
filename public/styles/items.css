@@ -92,10 +92,9 @@ hr {
 .item-container {
     /* min-width: 1480px; */
     margin: 25px 25px 25px 25px;
-    max-width: 1800px;
     min-height: 80vh;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     overflow-x: auto;
     flex-shrink: 0;

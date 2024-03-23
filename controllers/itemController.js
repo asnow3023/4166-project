@@ -12,11 +12,15 @@ exports.handleReq = (req, res, next) => {
         
         // filter all items that fields contain the regexTerm
         const filter = {
-            $or: [
-                { title: {$regex: regexTerm} },
-                { seller: {$regex: regexTerm} },
-                { condition: {$regex: regexTerm} },
-                { details: {$regex: regexTerm} },
+            $and : [
+                {active: true}    
+            ,{
+                $or: [
+                    { title: {$regex: regexTerm} },
+                    { seller: {$regex: regexTerm} },
+                    { condition: {$regex: regexTerm} },
+                    { details: {$regex: regexTerm} },
+                ]}
             ]
         }
 
@@ -41,6 +45,13 @@ exports.handleReq = (req, res, next) => {
 //item details
 exports.item = (req, res, next) => {
     let id = req.params.id;
+
+    if(!id.match(/^[0-9a-fA-F]{24}/)) {
+        let err = new Error('Invalid Item id');
+        err.status = 400;
+        return next(err);
+    }
+
     model.findById(id)
     .then(item =>{
         if(item){
@@ -64,6 +75,12 @@ exports.new = (req, res) => {
 exports.delete = (req, res, next) => {
     let id = req.params.id;
 
+    if(!id.match(/^[0-9a-fA-F]{24}/)) {
+        let err = new Error('Invalid Item id');
+        err.status = 400;
+        return next(err);
+    }
+
     model.findByIdAndDelete(id, {useFindAndModify: false, runValidators: true})
     .then(item => {
         if(item){
@@ -80,7 +97,7 @@ exports.delete = (req, res, next) => {
 exports.create = (req,res,next) => {
     let item = new model(req.body);
     item.image = '../images/' + req.file.filename;
-
+    
     item.save()
     .then(() => {
         res.redirect('./items');
@@ -96,6 +113,13 @@ exports.create = (req,res,next) => {
 //renders edit page by the item found by id
 exports.edit = (req, res, next) => {
     let id = req.params.id;
+
+    if(!id.match(/^[0-9a-fA-F]{24}/)) {
+        let err = new Error('Invalid Item id');
+        err.status = 400;
+        return next(err);
+    }
+    
     model.findById(id)
     .then(item => {
         if(item){
@@ -113,6 +137,13 @@ exports.edit = (req, res, next) => {
 exports.update = (req, res, next) => {
     let item = req.body;
     let id = req.params.id;
+
+    if(!id.match(/^[0-9a-fA-F]{24}/)) {
+        let err = new Error('Invalid Item id');
+        err.status = 400;
+        return next(err);
+    }
+    
     //if user uploaded a image instead of leaving it blank
     if(req.file != undefined){
         item.image = '../images/' + req.file.filename;

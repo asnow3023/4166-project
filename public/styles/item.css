@@ -97,7 +97,7 @@ hr{
 /* ---END OF HEADER--- */
 
 .container{
-    margin: 0 auto; 
+    margin: 25px auto; 
     width: 100%;
     display: flex;
     min-height: 83%;
