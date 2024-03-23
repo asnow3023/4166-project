@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const itemSchema = new Schema({
-    title: {type: String, required: true},
-    seller: {type: String, required: true},
-    condition: {type: String, required: true, enum: ['New', 'Like New', 'Good Condition', 'Aged Vintage/Antique', 'Needs Repair/Refurbishment']},
-    price: {type: Number, required: true, min: 0.01},
-    details: {type: String, required: true},
-    image: {type: String, required: true},
+    title: {type: String, required: [true, 'Title field cannot be empty']},
+    seller: {type: String, required: [true, 'Seller field cannot be empty']},
+    condition: {type: String, required: [true, 'You must select the item condition'], 
+                enum: ['New', 'Like New', 'Good Condition', 'Aged Vintage/Antique', 'Needs Repair/Refurbishment']},
+    price: {type: Number, required: [true, 'Price cannot be empty'], min: [0.01, 'Price must be greater than 0.01']},
+    details: {type: String, required: [true, 'Item details cannot be empty']},
+    image: {type: String, required: [true, 'You must upload an image']},
     totalOffers: {type: Number, default: 0},
     isActive: {type: Boolean, default: true}
 });
