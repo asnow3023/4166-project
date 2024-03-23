@@ -6,12 +6,27 @@ exports.handleReq = (req, res, next) => {
 
     let items;
     if(searchInput){ // if search input exists
-        const results = model.searchByInput(searchInput);
 
-            // whether results exist or does not exist, items would be passed and will be checked with its length in view ejs 
-            items = results;
+        // create regex term  with case insensitive option
+        const regexTerm = new RegExp(searchInput, "i");
+        
+        // filter all items that fields contain the regexTerm
+        const filter = {
+            $or: [
+                { title: {$regex: regexTerm} },
+                { seller: {$regex: regexTerm} },
+                { condition: {$regex: regexTerm} },
+                { details: {$regex: regexTerm} },
+            ]
+        }
+
+        // whether results exist or does not exist, items would be passed and will be checked with its length in view ejs 
+        model.find(filter)
+        .then(items => {
             items.sort((a,b) => a.price - b.price);
             res.render('view/items', {cssFile: '/styles/items.css', items});
+        })
+        .catch(err => next(err));
 
     } else if(!searchInput){ // no search input - items
         items = model.find()
@@ -20,21 +35,24 @@ exports.handleReq = (req, res, next) => {
             res.render('view/items', {cssFile: '/styles/items.css', items});
         })
         .catch(err=> next(err));
-
     }
 }
 
 //item details
 exports.item = (req, res, next) => {
     let id = req.params.id;
-    let item = model.findById(id);
-    if(item){
-        res.render('view/item', { cssFile: '/styles/item.css', item });
-    }else{
-        let err = new Error('Cannot find item with id ' + id);
-        err.status = 404;
-        next(err);
-    }
+    model.findById(id)
+    .then(item =>{
+        if(item){
+            res.render('view/item', { cssFile: '/styles/item.css', item });
+
+        }else{
+            let err = new Error('Cannot find item with id ' + id);
+            err.status = 404;
+            next(err);
+        }
+    })
+    .catch(err=>next(err));
 };
 
 //render new listing page
@@ -45,35 +63,50 @@ exports.new = (req, res) => {
 //initiate delete function
 exports.delete = (req, res, next) => {
     let id = req.params.id;
-    if(model.deleteById(id)){
-        res.redirect('./');
-    }else{
-        let err = new Error('Cannot find the item with id ' + id);
-        err.status;
-        next(err);
-    }
+
+    model.findByIdAndDelete(id, {useFindAndModify: false, runValidators: true})
+    .then(item => {
+        if(item){
+            res.redirect('/');
+        }else{
+            let err = new Error('Cannot find a story with id ' + id);
+            err.status = 404;
+            next(err);
+        }
+    })
 };
 
 //create and store new listing
-exports.create = (req,res) => {
-    let item = req.body;
+exports.create = (req,res,next) => {
+    let item = new model(req.body);
     item.image = '../images/' + req.file.filename;
-    item.totalOffers = 0;
-    model.save(item);
-    res.redirect('./items');
+
+    item.save()
+    .then(() => {
+        res.redirect('./items');
+    })
+    .catch(err=> {
+        if(err.name === 'ValidationError') {
+            err.status = 400;
+        }
+        next(err);
+    });
 };
 
 //renders edit page by the item found by id
 exports.edit = (req, res, next) => {
     let id = req.params.id;
-    let item = model.findById(id);
-    if(item){
-        res.render('view/edit', {cssFile: '/styles/edit.css', item});
-    } else{
-        let err = new Error('Cannot find item with id ' + id);
-        err.status = 404;
-        next(err);
-    }
+    model.findById(id)
+    .then(item => {
+        if(item){
+            res.render('view/edit', {cssFile: '/styles/edit.css', item});
+        } else{
+            let err = new Error('Cannot find item with id ' + id);
+            err.status = 404;
+            next(err);
+        }
+    })
+    .catch(err=>next(err));
 };
 
 //update the edited listing
@@ -83,15 +116,22 @@ exports.update = (req, res, next) => {
     //if user uploaded a image instead of leaving it blank
     if(req.file != undefined){
         item.image = '../images/' + req.file.filename;
-    }else{
-        item.image = null;
     }
 
-    if (model.updateById(id, item)){
-        res.redirect('./'+ id);
-    }else{
-        let err = new Error('Cannot find item with id ' + id);
-        err.status = 404;
+    model.findByIdAndUpdate(id, item, {useFindAndModify: false, runValidators:true})
+    .then(item => {
+        if (item){
+            res.redirect('./'+ id);
+        }else{
+            let err = new Error('Cannot find item with id ' + id);
+            err.status = 404;
+            next(err);
+        }
+    })
+    .catch(err=> {
+        if(err.name === 'ValidationError') {
+            err.status = 400;
+        }
         next(err);
-    }
+    });
 };
