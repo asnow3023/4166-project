@@ -1,5 +1,8 @@
 const express = require('express');
 const controller = require('../controllers/itemController');
+const {validateId} = require('../middlewares/validator');
+const {isLoggedIn, isSeller} = require('../middlewares/auth');
+
 
 const multer  = require('multer');
 const storage = multer.diskStorage({
@@ -19,22 +22,22 @@ const router = express.Router();
 router.get('/', controller.handleReq);
 
 //route for GET: the new page
-router.get('/new', controller.new);
+router.get('/new', isLoggedIn, controller.new);
 
 //route for POST: newly created listing
-router.post('/', upload.single('image'), controller.create);
+router.post('/', upload.single('image'), isLoggedIn, controller.create);
 
 //route for GET: item selected
-router.get('/:id', controller.item);
+router.get('/:id', validateId, controller.item);
 
 //route for GET: selected item edit page
-router.get('/:id/edit', controller.edit);
+router.get('/:id/edit', validateId, isSeller, controller.edit);
 
 //route for PUT: edited item update
-router.put('/:id', upload.single('image'), controller.update);
+router.put('/:id', upload.single('image'), validateId, isSeller, controller.update);
 
 //route for DELETE: deleting selected item
-router.delete('/:id', controller.delete);
+router.delete('/:id', validateId, isSeller, controller.delete);
 
 
 module.exports = router;

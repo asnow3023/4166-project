@@ -1,4 +1,5 @@
 const model = require('../models/item');
+const userModel = require('../models/user');
 
 //handles two types of requests: to items page OR with a search parameter(query)
 exports.handleReq = (req, res, next) => {
@@ -46,12 +47,6 @@ exports.handleReq = (req, res, next) => {
 exports.item = (req, res, next) => {
     let id = req.params.id;
 
-    if(!id.match(/^[0-9a-fA-F]{24}/)) {
-        let err = new Error('Invalid Item id');
-        err.status = 400;
-        return next(err);
-    }
-
     model.findById(id)
     .then(item =>{
         if(item){
@@ -75,19 +70,15 @@ exports.new = (req, res) => {
 exports.delete = (req, res, next) => {
     let id = req.params.id;
 
-    if(!id.match(/^[0-9a-fA-F]{24}/)) {
-        let err = new Error('Invalid Item id');
-        err.status = 400;
-        return next(err);
-    }
-
     model.findByIdAndDelete(id, {useFindAndModify: false, runValidators: true})
     .then(item => {
         if(item){
-            res.redirect('/');
+            req.flash('success',  'Item deleted successfully');
+            res.redirect('/items');
         }else{
             let err = new Error('Cannot find a story with id ' + id);
             err.status = 404;
+            req.flash('error',  'Error deleting the item');
             next(err);
         }
     })
@@ -96,15 +87,31 @@ exports.delete = (req, res, next) => {
 //create and store new listing
 exports.create = (req,res,next) => {
     let item = new model(req.body);
-    item.image = '../images/' + req.file.filename;
-    
-    item.save()
+    item.sellerId = req.session.user;
+
+    userModel.findById(item.sellerId)
+    .then((user) => {
+        console.log(user);
+        if(user){
+            let fullName = user.firstName + " " + user.lastName;
+            item.seller = fullName;
+            item.image = '../images/' + req.file.filename;
+
+            return item.save();
+        } else {
+            let err = new Error('User not Found!');
+            err.status = 404;
+            next(err);
+        }
+    })
     .then(() => {
+        req.flash('success',  'Item added to the list successfully');
         res.redirect('./items');
     })
     .catch(err=> {
         if(err.name === 'ValidationError') {
             err.status = 400;
+            req.flash('error',  'Error adding the item to the list');
         }
         next(err);
     });
@@ -113,12 +120,6 @@ exports.create = (req,res,next) => {
 //renders edit page by the item found by id
 exports.edit = (req, res, next) => {
     let id = req.params.id;
-
-    if(!id.match(/^[0-9a-fA-F]{24}/)) {
-        let err = new Error('Invalid Item id');
-        err.status = 400;
-        return next(err);
-    }
     
     model.findById(id)
     .then(item => {
@@ -137,12 +138,6 @@ exports.edit = (req, res, next) => {
 exports.update = (req, res, next) => {
     let item = req.body;
     let id = req.params.id;
-
-    if(!id.match(/^[0-9a-fA-F]{24}/)) {
-        let err = new Error('Invalid Item id');
-        err.status = 400;
-        return next(err);
-    }
     
     //if user uploaded a image instead of leaving it blank
     if(req.file != undefined){
@@ -152,16 +147,19 @@ exports.update = (req, res, next) => {
     model.findByIdAndUpdate(id, item, {useFindAndModify: false, runValidators:true})
     .then(item => {
         if (item){
+            req.flash('success',  'Successfully edited the item!');
             res.redirect('./'+ id);
         }else{
             let err = new Error('Cannot find item with id ' + id);
             err.status = 404;
+            req.flash('error',  'Error editing the item');
             next(err);
         }
     })
     .catch(err=> {
         if(err.name === 'ValidationError') {
             err.status = 400;
+            req.flash('error',  'Error editing the item');
         }
         next(err);
     });

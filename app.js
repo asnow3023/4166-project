@@ -1,7 +1,11 @@
 // require modules
 const express = require('express');
 const morgan = require('morgan');
+const session = require('express-session')
+const MongoStore = require('connect-mongo');
+const flash = require('connect-flash');
 const itemRoutes = require('./routes/itemRoutes');
+const userRoutes = require('./routes/userRoutes');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 
@@ -24,6 +28,25 @@ mongoose.connect(uri)
 .catch(err=>console.log(err.message));
 
 // mount middleware
+app.use(
+    session({
+        secret: "ajfeirf90aeu9eroejfoefj",
+        resave: false,
+        saveUninitialized: false,
+        store: new MongoStore({mongoUrl: uri}),
+        cookie: {maxAge: 60*60*1000}
+        })
+);
+app.use(flash());
+
+app.use((req, res, next) => {
+    //console.log(req.session);
+    res.locals.user = req.session.user||null;
+    res.locals.errorMessages = req.flash('error');
+    res.locals.successMessages = req.flash('success');
+    next();
+});
+
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
@@ -35,6 +58,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/items', itemRoutes);
+
+app.use('/users', userRoutes);
 
 // error 404 middleware
 app.use((req, res, next) => {

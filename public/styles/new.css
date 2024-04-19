@@ -85,6 +85,7 @@ a{
     width: 25%;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 /* ---END OF HEADER--- */
@@ -192,3 +193,22 @@ footer span{
     padding: 0 5px 0 5px;
     text-decoration:none;
 }
+
+.success {
+    background: rgba(108, 192, 112, 0.7);
+    color: #fff;
+    width: 100%;
+    margin: 0 auto 1rem auto;
+    text-align: center;
+    padding: 0.5rem 0;
+  
+  }
+  
+  .error {
+    background: rgba(255, 102, 51, 0.7);
+    color: #fff;
+    width: 100%;
+    margin: 0 auto 1rem auto;
+    text-align: center;
+    padding: 0.5rem 0;
+  }

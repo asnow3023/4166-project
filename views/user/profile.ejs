@@ -1,0 +1,40 @@
+<%- include('../partials/header.ejs') %> 
+<div class="container">
+    <div class="listing-container">
+        <div class="listing-title">
+            <h3>My Listings</h3>
+        </div>
+        <div class="item-container">
+            <div class="list-header">
+                <p class="item-header">Item</p>
+                <p class="status-header">Status</p>
+                <p class="action-header">Action</p>
+            </div>
+                <% if(items.length){%>
+                    <%items.forEach(item => {%>
+                            <div class="item-body"> 
+                                <a href="/items/<%= item._id %>" class="item-title" ><%=item.title%></a>
+                                <%if(item.active == true) {%>
+                                    <p class="item-status">active</p>
+                                <%} else {%>
+                                    <p class="item-status">inactive</p>
+                                <%}%>
+                                <form>
+                                <div class="item-button-container">
+                                    <button type="submit" class="btn-edit" formmethod="GET" formaction="/items/<%= item._id %>/edit"></button>
+                                    <button type="submit" class="btn-delete" formmethod="POST" formaction="/items/<%= item._id %>?_method=DELETE"></button>
+                                </div>
+                                </form>
+                            </div>
+
+                    <%});%>
+                <%} else { %>
+                    <div class="content">
+                        <p class="search-message">You have not listed any items yet</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../partials/footer.ejs') %>  

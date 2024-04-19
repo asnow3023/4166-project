@@ -30,12 +30,6 @@
                 <p>Item Details: </p>
                 <p><%= item.details %></p>
             </div>
-            <div class="button-container"> 
-                <form>
-                    <button type="submit" class="btn-edit"  formmethod="GET" formaction="/items/<%= item._id %>/edit">Edit</button>
-                    <button type="submit" class="btn-delete" formmethod="POST" formaction="/items/<%= item._id %>?_method=DELETE">Delete</button>
-                </form>
-            </div>
         </div>
     </div>
 </div>

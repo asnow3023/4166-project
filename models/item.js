@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const itemSchema = new Schema({
     title: {type: String, required: [true, 'Title field cannot be empty']},
-    seller: {type: String, required: [true, 'Seller field cannot be empty']},
+    sellerId: {type: String, required: true},
+    seller: {type: String, required: true},
     condition: {type: String, required: [true, 'You must select the item condition'], 
                 enum: ['New', 'Like New', 'Good Condition', 'Aged Vintage/Antique', 'Needs Repair/Refurbishment']},
     price: {type: Number, required: [true, 'Price cannot be empty'], min: [0.01, 'Price must be greater than 0.01']},
