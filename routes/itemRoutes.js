@@ -34,10 +34,10 @@ router.get('/:id', validateId, controller.item);
 router.get('/:id/edit', validateId, isSeller, controller.edit);
 
 //route for PUT: edited item update
-router.put('/:id', upload.single('image'), validateId, isSeller, controller.update);
+router.put('/:id', upload.single('image'), isLoggedIn, validateId, isSeller, controller.update);
 
 //route for DELETE: deleting selected item
-router.delete('/:id', validateId, isSeller, controller.delete);
+router.delete('/:id', isLoggedIn, validateId, isSeller, controller.delete);
 
 
 module.exports = router;
