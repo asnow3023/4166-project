@@ -11,6 +11,7 @@ const itemSchema = new Schema({
     details: {type: String, required: [true, 'Item details cannot be empty']},
     image: {type: String, required: [true, 'You must upload an image']},
     totalOffers: {type: Number, default: 0},
+    highestOffer: {type: Number, default: 0},
     active: {type: Boolean, default: true}
 });
 

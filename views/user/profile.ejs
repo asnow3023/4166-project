@@ -1,9 +1,9 @@
 <%- include('../partials/header.ejs') %> 
 <div class="container">
+    <div class="listing-title">
+        <h3>My Listings</h3>
+    </div>
     <div class="listing-container">
-        <div class="listing-title">
-            <h3>My Listings</h3>
-        </div>
         <div class="item-container">
             <div class="list-header">
                 <p class="item-header">Item</p>
@@ -33,8 +33,39 @@
                         <p class="search-message">You have not listed any items yet</p>
                     </div>
                 <% } %>
-            </div>
         </div>
     </div>
+    <div class="listing-title">
+        <h3>My Offers</h3>
+    </div>
+    <div class="listing-container">
+        <div class="item-container">
+            <div class="list-header">
+                <p class="item-header">Item</p>
+                <p class="status-header">Status</p>
+                <p class="action-header">Amount</p>
+            </div>
+                <% if(offers.length){%>
+                    <%offers.forEach(offer => {%>
+                            <div class="item-body"> 
+                                <a href="/items/<%= offer.itemId %>" class="item-title" ><%= offer.title %></a>
+                                <%if(offer.status == "pending") {%>
+                                    <p class="item-status">pending</p>
+                                <%} else if (offer.status == "accepted") {%>
+                                    <p class="item-status">accepted</p>
+                                <%} else if (offer.status == "rejected") {%>
+                                    <p class="item-status">rejected</p>
+                                <%}%>
+                                    <p class="item-status">$<%= offer.amount %></p>
+                            </div>
+                    <%})%>
+                <%} else { %>
+                    <div class="content">
+                        <p class="search-message">You have not listed any items yet</p>
+                    </div>
+                <% } %>
+        </div>
+    </div>
+</div>
 </div>
 <%- include('../partials/footer.ejs') %>  

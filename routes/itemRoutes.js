@@ -1,5 +1,6 @@
 const express = require('express');
 const controller = require('../controllers/itemController');
+const offerRoutes = require('./offerRoutes');
 const {validateId} = require('../middlewares/validator');
 const {isLoggedIn, isSeller} = require('../middlewares/auth');
 
@@ -16,7 +17,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 
 //route for GET: handling landing page and search request
 router.get('/', controller.handleReq);
@@ -39,5 +40,7 @@ router.put('/:id', upload.single('image'), isLoggedIn, validateId, isSeller, con
 //route for DELETE: deleting selected item
 router.delete('/:id', isLoggedIn, validateId, isSeller, controller.delete);
 
+//nested-router for offerRoutes
+router.use('/:id/offers', offerRoutes);
 
 module.exports = router;

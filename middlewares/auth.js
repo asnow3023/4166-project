@@ -25,12 +25,30 @@ exports.isSeller = (req, res, next) => {
     Item.findById(req.params.id)
     .then(item => {
         if(item) {
-            console.log(item.sellerId);
-            console.log(req.session.user);
             if(item.sellerId == req.session.user)
                 return next();
             else {
                 let err = new Error('Unauthorized to access the resource');
+                err.status = 401;
+                return next(err);            
+            }
+        } else {
+            let err = new Error('Cannot find a item with id ' + id);
+            err.status = 404;
+            next(err);
+        }
+    })
+    .catch(err=>next(err));
+}
+
+exports.isSellerForOffer = (req, res, next) => {
+    Item.findById(req.params.id)
+    .then(item => {
+        if(item) {
+            if(item.sellerId != req.session.user){
+                return next();
+            }else if (item.sellerId == req.session.user){
+                let err = new Error('You cannot make offer to your own item!');
                 err.status = 401;
                 return next(err);            
             }

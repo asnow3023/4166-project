@@ -91,7 +91,6 @@ exports.create = (req,res,next) => {
 
     userModel.findById(item.sellerId)
     .then((user) => {
-        console.log(user);
         if(user){
             let fullName = user.firstName + " " + user.lastName;
             item.seller = fullName;

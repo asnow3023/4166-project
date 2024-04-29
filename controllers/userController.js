@@ -1,5 +1,7 @@
 const model = require('../models/user');
 const itemModel = require('../models/item');
+const offerModel = require('../models/offer');
+const { item } = require('./itemController');
 
 exports.new = (req, res, next) => {
     res.render('../views/user/new', { cssFile: '/styles/user.css' });
@@ -58,11 +60,45 @@ exports.login = (req, res, next) => {
 }
 
 exports.profile = (req, res, next) => {
-    itemModel.find({sellerId: req.session.user})
+    let userId = req.session.user;
+
+    //find the list of items created by the user
+    itemModel.find({sellerId: userId})
     .then(items => {
-        res.render('../views/user/profile', { cssFile: '/styles/profile.css', items});
+        //find the list of offers created by the user
+        offerModel.find({userId: userId})
+        .then(offers => {
+
+            const promises = [];
+
+            offers.forEach((offer) => {
+                const promise = itemModel.findById(offer.itemId)
+                .then((foundItem) => {
+                    offer.title = foundItem.title;
+                })
+                .catch((err) => {
+                    next(err);
+                });
+
+                //push to promises
+                promises.push(promise);
+            });
+
+            //wait on promises
+            Promise.all(promises)
+                .then(() => {
+                    //sends the list of items and offers to a newly rendered profile page
+                    res.render('../views/user/profile', { cssFile: '/styles/profile.css', items, offers}); 
+                })
+                .catch(err=>next(err))
+        })
+        .catch((err) => {
+            next(err);
+        });
     })
-    .catch(err => next(err));
+    .catch((err) => {
+        next(err);
+    });
 }
 
 exports.logout = (req, res, next)=>{
