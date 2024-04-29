@@ -1,5 +1,6 @@
 const model = require('../models/item');
 const userModel = require('../models/user');
+const offerModel = require('../models/offer');
 
 //handles two types of requests: to items page OR with a search parameter(query)
 exports.handleReq = (req, res, next) => {
@@ -71,10 +72,14 @@ exports.delete = (req, res, next) => {
     let id = req.params.id;
 
     model.findByIdAndDelete(id, {useFindAndModify: false, runValidators: true})
-    .then(item => {
+    .then(async (item) => {
         if(item){
-            req.flash('success',  'Item deleted successfully');
-            res.redirect('/items');
+            await offerModel.deleteMany({itemId:id})
+            .then(() => {
+                req.flash('success',  'Item deleted successfully');
+                res.redirect('/items');
+            })
+            .catch(err=>next(err));
         }else{
             let err = new Error('Cannot find a story with id ' + id);
             err.status = 404;
