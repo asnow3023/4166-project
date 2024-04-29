@@ -134,7 +134,7 @@ hr{
 .item-container{
     display:flex;
     justify-content: center;
-    padding: 25px 0 25px 0;
+    padding: 0px;
     min-height: 350px;
     color:#351E29;
     background-color: white;

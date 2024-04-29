@@ -30,7 +30,6 @@
                 <p>Item Details: </p>
                 <p><%= item.details %></p>
             </div>
-            <% console.log(item._id)%>
             <% if(item.active == true) {%>
                 <div>
                     <form action="/items/<%= item._id %>/offers" method="POST" enctype="application/x-www-form-urlencoded">
@@ -49,6 +48,8 @@
                         <p class="text-danger">Current Highest Offer: $<%= item.highestOffer %></p>
                     </div>
                 <%}%>
+            <%} else {%>
+                    <p class="text-danger">Unfortunately, this comic is no longer available.</p>
             <%}%>
         </div>
     </div>

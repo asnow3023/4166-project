@@ -141,12 +141,13 @@ hr{
 }
 
 .action-header, .item-button-container{
+    font-size: larger;
     padding: 0 5px 0 5px ;
     flex:1;
 }
 
 .item-button-container{
-    margin: auto;
+    margin: 0;
 }
 
 .button-container{

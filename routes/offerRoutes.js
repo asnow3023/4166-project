@@ -8,10 +8,10 @@ const router = express.Router({mergeParams: true});
 //route for POST: posting a new offer
 router.post('/', isLoggedIn, isSellerOfOffer, controller.new);
 
-//route for GET: viewing all ofers
+//route for GET: viewing all offers
 router.get('/', isLoggedIn, isSeller, controller.view);
 
 //route for POST: updating upon accept offer
-router.post('/accept', controller.accept);
+router.post('/:offerId/accept', isLoggedIn, isSeller, controller.accept);
 
 module.exports = router;

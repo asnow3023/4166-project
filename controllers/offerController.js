@@ -2,6 +2,8 @@ const ObjectID = require('mongodb');
 const model = require('../models/offer');
 const itemModel = require('../models/item');
 const userModel = require('../models/user');
+const offer = require('../models/offer');
+const item = require('../models/item');
 
 //post new offers and update item offer quantity
 exports.new = (req, res, next) => {
@@ -92,5 +94,65 @@ exports.view = (req, res, next) => {
 
 //accept offer
 exports.accept = (req, res, next) => {
+    let itemId = req.params.id;
+    let offerId = req.params.offerId;
 
+    item.findByIdAndUpdate(itemId,{active:false})
+    .then(async (item) => {
+        if(item){
+            try{
+                const offers = await model.find({ itemId: itemId }); // find all offers for the itemId
+
+                offers.forEach(async (offer) => {
+                    if(offer.id === offerId){
+                        await model.findByIdAndUpdate(offer.id, { status: 'accepted' });
+                    } else {
+                        await model.findByIdAndUpdate(offer.id, { status: 'rejected' });
+                    }
+                })
+
+                // Redirect to offers view
+                req.flash('success', 'Offer accepted successfully');
+                res.redirect('/items/' + itemId + '/offers');
+
+            }catch(err){
+                next(err)
+            }
+        } else {
+            const err = new Error('Cannot find item with id ' + id);
+            err.status = 404;
+            req.flash('error', 'Error editing the item');
+            next(err);
+        }
+    })
+    .catch(err=>next(err));
+
+
+
+    // .then((item) => {
+    //     if (item){
+    //         model.find({itemId:itemId}) // find all offers for the itemId
+    //         .then((offers) => {
+    //             offers.forEach((offer) => {
+    //                 if(offer.id == offerId){ //if current offer id is equal to selected offerId
+    //                     //update the status of the offer from pending to accepted
+    //                     model.findByIdAndUpdate(offer.id, {status:'accepted'})
+    //                 } else {
+    //                     //update the status of the rest of the offers on this item from pending to rejected
+    //                     model.findByIdAndUpdate(offer.id, {status:'rejected'})
+    //                 }
+    //             })
+
+    //             //redirect to offers view
+    //             req.flash('success',  'Offer accepted successfully');
+    //             res.redirect('/items/'+ itemId + '/offers');
+    //         })
+    //     }else{
+    //         let err = new Error('Cannot find item with id ' + id);
+    //         err.status = 404;
+    //         req.flash('error',  'Error editing the item');
+    //         next(err);
+    //     }
+    // })
+    // .catch(err=>next(err));
 }

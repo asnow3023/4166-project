@@ -16,7 +16,11 @@
                                     <p class="item-title"><%= offer.username %></p>
                                     <p class="item-status">$<%= offer.amount %></p>
                                     <form class="item-button-container"> 
-                                        <button type="submit" class="btn btn-primary "  formmethod="POST" formaction="" >Accept</button>
+                                        <%if(item.active != false){%>
+                                            <button type="submit" class="btn btn-primary"  formmethod="POST" formaction="/items/<%= item._id%>/offers/<%= offer._id%>/accept" >Accept</button>
+                                        <%} else {%>
+                                            <%=offer.status%> 
+                                        <%}%>
                                     </form>
                             </div>
                     <%})%>
