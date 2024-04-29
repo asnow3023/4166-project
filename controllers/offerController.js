@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb');
 const model = require('../models/offer');
 const itemModel = require('../models/item');
+const userModel = require('../models/user');
 
 //post new offers and update item offer quantity
 exports.new = (req, res, next) => {
@@ -54,7 +55,39 @@ exports.new = (req, res, next) => {
 
 //view all offers for the item
 exports.view = (req, res, next) => {
+    let itemId = req.params.id
 
+    itemModel.findById(itemId)
+    .then((item) => {
+        if(item){
+            model.find({itemId:itemId})
+            .then((offers) => {
+
+            const promises = [];
+
+            offers.forEach((offer) => {
+                const promise = userModel.findById(offer.userId)
+                .then((foundUser) => {
+                    offer.username = String(foundUser.firstName + " " +  foundUser.lastName);
+                })
+                .catch((err) => {
+                    next(err);
+                });
+
+                //push to promises
+                promises.push(promise);
+            });
+            Promise.all(promises)
+                    .then(() => {
+                        //sends the list of items and offers to a newly rendered profile page
+                        res.render('../views/offers/offer', { cssFile: '/styles/offer.css', item, offers}); 
+                    })
+                    .catch(err=>next(err))
+            })      
+        }
+    })
+    .catch(err=>next(err))
+    
 }
 
 //accept offer

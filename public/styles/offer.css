@@ -1,5 +1,6 @@
 .page-container {
     flex-direction: column;
+    height: 100vh;
     overflow-x: hidden;
     justify-content: flex-end;
 }
@@ -131,24 +132,21 @@ hr{
 .item-header, .item-title{
     font-size: larger;
     padding: 0 5px 0 5px;
-    flex: 5;
+    flex: 2;
 }
 
 .status-header, .item-status{
     padding: 0 5px 0 5px ;
-    flex:2;
+    flex:1;
 }
 
-.action-header, .item-button-container, .amount-header{
-    display:flex;
-    justify-content: center;
-    flex:3;
+.action-header, .item-button-container{
+    padding: 0 5px 0 5px ;
+    flex:1;
 }
 
-.offer-amount{
-    display:flex;
-    justify-content: center;
-    flex:3;
+.item-button-container{
+    margin: auto;
 }
 
 .button-container{
@@ -158,18 +156,10 @@ hr{
     padding: 0 0 10px 0;
 }
 
-.btn-view-offer{
-    border-radius: 10px;
-    font-size: 16px;
-    width: 60%;
-    padding: 5px;
-    margin: 5px;
-    font-weight: bold;
-}
 .btn-delete, .btn-edit{
     border-radius: 10px;
     font-size: 16px;
-    width: 20%;
+    width: 30%;
     padding: 5px;
     margin: 0 5px 0 5px;
     font-weight: bold;

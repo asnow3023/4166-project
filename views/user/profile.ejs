@@ -19,14 +19,12 @@
                                 <%} else {%>
                                     <p class="item-status">inactive</p>
                                 <%}%>
-                                <form>
-                                <div class="item-button-container">
+                                <form class="item-button-container">
                                     <button type="submit" class="btn-edit" formmethod="GET" formaction="/items/<%= item._id %>/edit"></button>
                                     <button type="submit" class="btn-delete" formmethod="POST" formaction="/items/<%= item._id %>?_method=DELETE"></button>
-                                </div>
+                                    <button type="submit" class="btn btn-primary btn-view-offer" formmethod="GET" formaction="/items/<%= item._id %>/offers">View Offers</button>
                                 </form>
                             </div>
-
                     <%});%>
                 <%} else { %>
                     <div class="content">
@@ -43,7 +41,7 @@
             <div class="list-header">
                 <p class="item-header">Item</p>
                 <p class="status-header">Status</p>
-                <p class="action-header">Amount</p>
+                <p class="amount-header">Amount</p>
             </div>
                 <% if(offers.length){%>
                     <%offers.forEach(offer => {%>
@@ -56,7 +54,7 @@
                                 <%} else if (offer.status == "rejected") {%>
                                     <p class="item-status">rejected</p>
                                 <%}%>
-                                    <p class="item-status">$<%= offer.amount %></p>
+                                    <p class="offer-amount">$<%= offer.amount %></p>
                             </div>
                     <%})%>
                 <%} else { %>

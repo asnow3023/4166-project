@@ -41,7 +41,8 @@ exports.isSeller = (req, res, next) => {
     .catch(err=>next(err));
 }
 
-exports.isSellerForOffer = (req, res, next) => {
+//if the user is the seller of the offer, renders 401 error page
+exports.isSellerOfOffer = (req, res, next) => {
     Item.findById(req.params.id)
     .then(item => {
         if(item) {
