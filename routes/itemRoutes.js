@@ -1,21 +1,9 @@
 const express = require('express');
 const controller = require('../controllers/itemController');
 const offerRoutes = require('./offerRoutes');
-const {validateId} = require('../middlewares/validator');
+const {upload} = require('../middlewares/multer')
+const {validateId, validateItem, validateResults} = require('../middlewares/validator');
 const {isLoggedIn, isSeller} = require('../middlewares/auth');
-
-
-const multer  = require('multer');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/images');
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
-    }
-});
-
-const upload = multer({ storage: storage });
 
 const router = express.Router({mergeParams: true});
 
@@ -26,7 +14,7 @@ router.get('/', controller.handleReq);
 router.get('/new', isLoggedIn, controller.new);
 
 //route for POST: newly created listing
-router.post('/', upload.single('image'), isLoggedIn, controller.create);
+router.post('/', upload, isLoggedIn, validateItem, validateResults, controller.create);
 
 //route for GET: item selected
 router.get('/:id', validateId, controller.item);
@@ -35,7 +23,7 @@ router.get('/:id', validateId, controller.item);
 router.get('/:id/edit', validateId, isSeller, controller.edit);
 
 //route for PUT: edited item update
-router.put('/:id', upload.single('image'), isLoggedIn, validateId, isSeller, controller.update);
+router.put('/:id', upload, isLoggedIn, validateId, validateItem, validateResults, isSeller, controller.update);
 
 //route for DELETE: deleting selected item
 router.delete('/:id', isLoggedIn, validateId, isSeller, controller.delete);

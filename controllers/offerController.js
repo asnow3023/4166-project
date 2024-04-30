@@ -67,12 +67,14 @@ exports.view = (req, res, next) => {
 
             const promises = [];
 
+            //find all user names for each offer placed on one item
             offers.forEach((offer) => {
                 const promise = userModel.findById(offer.userId)
                 .then((foundUser) => {
                     offer.username = String(foundUser.firstName + " " +  foundUser.lastName);
                 })
                 .catch((err) => {
+                    console.log(err.name);
                     next(err);
                 });
 
@@ -88,7 +90,10 @@ exports.view = (req, res, next) => {
             })      
         }
     })
-    .catch(err=>next(err))
+    .catch((err)=>{
+        console.log(err.name);
+        next(err)
+    })
     
 }
 

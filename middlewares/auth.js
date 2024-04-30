@@ -33,7 +33,7 @@ exports.isSeller = (req, res, next) => {
                 return next(err);            
             }
         } else {
-            let err = new Error('Cannot find a item with id ' + id);
+            let err = new Error('Cannot find a item with id ' + req.params.id);
             err.status = 404;
             next(err);
         }
@@ -54,7 +54,7 @@ exports.isSellerOfOffer = (req, res, next) => {
                 return next(err);            
             }
         } else {
-            let err = new Error('Cannot find a item with id ' + id);
+            let err = new Error('Cannot find a item with id ' + req.params.id);
             err.status = 404;
             next(err);
         }

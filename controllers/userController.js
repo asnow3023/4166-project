@@ -38,11 +38,11 @@ exports.login = (req, res, next) => {
     let password = req.body.password;
 
     model.findOne({email: email})
-    .then(user=>{
+    .then(async user=>{
         if(user){ //if user exists
             user.comparePassword(password)
-            .then(result => {
-                if(result) { //if password matches
+            .then(async (result) => {
+                if(await result) { //if password matches
                     req.flash('success',  'You have successfully logged in!');
                     req.session.user = user._id;
                     res.redirect('/users/profile');
